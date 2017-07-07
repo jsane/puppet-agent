@@ -1,3 +1,11 @@
+
+def use_system_openssl?
+  # explicitly catch the expected "don't use this" values
+  return false if ENV["USE_SYSTEM_OPENSSL"] =~ /false|f|0/i
+  # explicitly cast the environment variable to a true Boolean otherwise
+  !!ENV["USE_SYSTEM_OPENSSL"]
+end
+
 project "puppet-agent" do |proj|
   platform = proj.get_platform
 
@@ -252,7 +260,21 @@ project "puppet-agent" do |proj|
   end
   proj.component "ruby-shadow" unless platform.is_aix? || platform.is_windows?
   proj.component "ruby-augeas" unless platform.is_windows?
-  proj.component "openssl"
+
+  if use_system_openssl?
+    if platform.name =~ /^el-(6|7)-.*/ || platform.name =~ /^fedora-f(24|25).*/
+    #  if (platform.is_el? || platform.is_fedora?)
+      # Currently we plan to support linking against system openssl
+      # only on these platforms.
+      proj.setting(:vendor_openssl, false)
+    else
+      fail "Currently linking against system openssl is supported only on Enterprise Linux or Fedora platforms"
+    end
+  else
+    proj.setting(:vendor_openssl, true)
+    proj.component "openssl"
+  end
+
   proj.component "puppet-ca-bundle"
   proj.component "libxml2" unless platform.is_windows?
   proj.component "libxslt" unless platform.is_windows?
