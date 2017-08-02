@@ -164,7 +164,7 @@ component "facter" do |pkg, settings, platform|
     cmake = "C:/ProgramData/chocolatey/bin/cmake.exe -G \"MinGW Makefiles\""
     toolchain = "-DCMAKE_TOOLCHAIN_FILE=#{settings[:tools_root]}/pl-build-toolchain.cmake"
     special_flags = "-DCMAKE_INSTALL_PREFIX=#{settings[:facter_root]} \
-                     -DRUBY_LIB_INSTALL=#{settings[:facter_root]}/lib "
+                     -DRUBY_LIB_INSTALL=#{settings[:facter_root]}/lib -Wl,nxcompat -Wl,dynamicbase"
   else
     toolchain = "-DCMAKE_TOOLCHAIN_FILE=/opt/pl-build-tools/pl-build-toolchain.cmake"
     cmake = "/opt/pl-build-tools/bin/cmake"
