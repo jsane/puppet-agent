@@ -1,9 +1,14 @@
 
 def use_system_openssl?
+
+  # We cannot specify environment variables in Jenkins so hard coding it here
+  # for testing it thru CI pipes.
+  return true
+
   # explicitly catch the expected "don't use this" values
-  return false if ENV["USE_SYSTEM_OPENSSL"] =~ /false|f|0/i
+  # return false if ENV["USE_SYSTEM_OPENSSL"] =~ /false|f|0/i
   # explicitly cast the environment variable to a true Boolean otherwise
-  !!ENV["USE_SYSTEM_OPENSSL"]
+  # !!ENV["USE_SYSTEM_OPENSSL"]
 end
 
 project "puppet-agent" do |proj|
