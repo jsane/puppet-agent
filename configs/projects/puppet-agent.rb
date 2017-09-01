@@ -273,7 +273,12 @@ project "puppet-agent" do |proj|
       # only on these platforms.
       proj.setting(:vendor_openssl, false)
     else
-      fail "Currently linking against system openssl is supported only on Enterprise Linux or Fedora platforms"
+      # We cannot fail for Ubuntu on Jenkins so temporarily just warning and proceeding
+      warn "Currently linking against system openssl is supported only on Enterprise Linux 6,7 or Fedora 24, 25 platforms"
+      warn "Using packaged openssl instead"
+      # fail "Currently linking against system openssl is supported only on Enterprise Linux 6,7 or Fedora 24, 25 platforms"
+      proj.setting(:vendor_openssl, true)
+      proj.component "openssl"
     end
   else
     proj.setting(:vendor_openssl, true)
