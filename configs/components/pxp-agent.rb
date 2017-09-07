@@ -10,7 +10,7 @@ component "pxp-agent" do |pkg, settings, platform|
     pkg.environment "PATH", "#{settings[:bindir]}:/opt/pl-build-tools/bin:$(PATH)"
   end
 
-  if !settings[:vendor_openssl]
+  if settings[:vendor_openssl] == "no"
     pkg.build_requires 'openssl-devel'
   else
     pkg.build_requires 'openssl'

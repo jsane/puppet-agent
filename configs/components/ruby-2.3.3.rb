@@ -121,7 +121,7 @@ component "ruby-2.3.3" do |pkg, settings, platform|
     pkg.build_requires 'runtime' if platform.is_cross_compiled_linux?
   end
 
-  if !settings[:vendor_openssl]
+  if settings[:vendor_openssl] == "no"
     pkg.build_requires 'openssl-devel'
   else
     pkg.build_requires 'openssl'

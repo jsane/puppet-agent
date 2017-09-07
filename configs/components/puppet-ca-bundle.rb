@@ -1,7 +1,7 @@
 component "puppet-ca-bundle" do |pkg, settings, platform|
   pkg.load_from_json("configs/components/puppet-ca-bundle.json")
 
-  if !settings[:vendor_openssl]
+  if settings[:vendor_openssl] == "no"
     pkg.build_requires 'openssl-devel'
   else
     pkg.build_requires 'openssl'
@@ -23,7 +23,7 @@ component "puppet-ca-bundle" do |pkg, settings, platform|
     java_available = false
   end
 
-  if !settings[:vendor_openssl]
+  if settings[:vendor_openssl] == "no"
     openssl_cmd = "/usr/bin/openssl"
   else
     openssl_cmd = "#{settings[:bindir]}/openssl"

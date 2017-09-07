@@ -16,7 +16,7 @@ component "facter" do |pkg, settings, platform|
 
   pkg.build_requires "ruby-#{settings[:ruby_version]}"
 
-  if !settings[:vendor_openssl]
+  if settings[:vendor_openssl] == "no"
     pkg.build_requires 'openssl-devel'
   else
     pkg.build_requires 'openssl'
