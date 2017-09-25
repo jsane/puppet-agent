@@ -23,7 +23,7 @@ step "Install puppet-agent..." do
   end
 end
 
-step "Install puppetserver..." do
+step "Install puppetserver...(pristine agent build)" do
   if ENV['SERVER_VERSION'].nil? || ENV['SERVER_VERSION'] == 'latest'
     server_version = 'latest'
     server_download_url = "http://nightlies.puppet.com"
@@ -76,7 +76,11 @@ step "Install puppetserver..." do
     end
   else
     install_puppetlabs_dev_repo(master, 'puppetserver', server_version, nil, :dev_builds_url => server_download_url)
-    install_puppetlabs_dev_repo(master, 'puppet-agent', ENV['SHA'])
+    # install_puppetlabs_dev_repo(master, 'puppet-agent', ENV['SHA'])
+    # Use standard version of puppet-agent not compiled against openssl when installing 
+    # on master. Some other modules being installed on master host messes up the openssl
+    # bindings and things behave strangely
+    install_puppetlabs_dev_repo(master, 'puppet-agent', "8b53512348dcf9a63b14ae5fdcb06710fb61840b")
     master.install_package('puppetserver')
   end
 
