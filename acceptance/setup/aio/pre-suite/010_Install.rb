@@ -2,6 +2,17 @@ require 'puppet/acceptance/common_utils'
 
 test_name "Install Packages"
 
+def func_use_system_openssl()
+  # Presently .i.e as of Oct 22 there is no way to specify an environment variable
+  # in PA CI so we are going to hard code it till there is support for FIPS platforms
+  return true
+
+  # explicitly catch the expected "don't use this" values
+  # return false if ENV["USE_SYSTEM_OPENSSL"] =~ /false|f|0/i
+  # explicitly cast the environment variable to a true Boolean otherwise
+  # !!ENV["USE_SYSTEM_OPENSSL"]
+end
+
 step "Install puppet-agent..." do
   opts = {
     :puppet_agent_version => ENV['SUITE_VERSION'] || ENV['SHA'],
@@ -11,7 +22,7 @@ step "Install puppet-agent..." do
     next if agent == master
     
     # Move the openssl libs package to a newer version on redhat platforms
-    use_system_openssl = ENV['USE_SYSTEM_OPENSSL']
+    use_system_openssl = func_use_system_openssl()
 
     if use_system_openssl && agent[:platform].match(/(?:el-7|redhat-7)/)
       rhel7_openssl_version = ENV['RHEL7_OPENSSL_VERSION']
@@ -38,6 +49,7 @@ step "Install puppet-agent..." do
   end
 end
 
+
 # make sure install is sane, beaker has already added puppet and ruby
 # to PATH in ~/.ssh/environment
 agents.each do |agent|
@@ -56,7 +68,7 @@ step "Enable FIPS on agent hosts..." do
     next if agent == master # Only on agents.
 
     # Do this only on rhel7, rhel6, f24, f25
-    use_system_openssl = ENV['USE_SYSTEM_OPENSSL']
+    use_system_openssl = func_use_system_openssl()
     if use_system_openssl
       # Other platforms to come...
       next if !agent[:platform].match(/(?:el-7|redhat-7)/)
