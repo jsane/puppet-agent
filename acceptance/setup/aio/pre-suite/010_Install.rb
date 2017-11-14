@@ -24,6 +24,8 @@ step "Install puppet-agent..." do
     # Move the openssl libs package to a newer version on redhat platforms
     use_system_openssl = func_use_system_openssl()
 
+    step "About to upgrade system openssl"
+
     if use_system_openssl && agent[:platform].match(/(?:el-7|redhat-7)/)
       rhel7_openssl_version = ENV['RHEL7_OPENSSL_VERSION']
       if rhel7_openssl_version.to_s.empty?
@@ -34,6 +36,8 @@ step "Install puppet-agent..." do
     else
       step "Skipping upgrade of openssl package... (" + agent[:platform] + ")"
     end
+
+    step "After upgrade system openssl step"
 
     if ENV['TESTING_RELEASED_PACKAGES']
       # installs both release repo and agent package
@@ -47,6 +51,8 @@ step "Install puppet-agent..." do
       install_puppet_agent_dev_repo_on(agent, opts)
     end
   end
+    
+  step "End install puppet-agent step"
 end
 
 
