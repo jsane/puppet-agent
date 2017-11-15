@@ -19,7 +19,7 @@ step "Install puppet-agent..." do
     :default_action => 'gem_install'
   }
   agents.each do |agent|
-    next if agent == master
+    # next if agent == master
     
     # Move the openssl libs package to a newer version on redhat platforms
     use_system_openssl = func_use_system_openssl()
@@ -71,7 +71,7 @@ step "Enable FIPS on agent hosts..." do
  # The TODO's need to be followed up
 
   agents.each do |agent|
-    next if agent == master # Only on agents.
+    # next if agent == master # Only on agents.
 
     # Do this only on rhel7, rhel6, f24, f25
     use_system_openssl = func_use_system_openssl()
