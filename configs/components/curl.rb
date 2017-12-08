@@ -3,7 +3,12 @@ component 'curl' do |pkg, settings, platform|
   pkg.md5sum '48ba7bd7b363b40cd446d1e7b4be9920'
   pkg.url "https://curl.haxx.se/download/curl-#{pkg.get_version}.tar.gz"
 
-  pkg.build_requires "openssl"
+  if settings[:vendor_openssl] == "no"
+    pkg.build_requires 'openssl-devel'
+  else
+    pkg.build_requires 'openssl'
+  end
+
   pkg.build_requires "puppet-ca-bundle"
 
   if platform.is_cross_compiled_linux?

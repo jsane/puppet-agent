@@ -1,3 +1,17 @@
+def use_system_openssl?
+  # PA CI has stopped supporting setting custom environment variables.
+  return true
+
+  # Ensure that required parameter in CI shows up as environment variables.
+  # sys_ssl = ENV["USE_SYSTEM_OPENSSL"]
+  # warn "Use system openssl: " + "#{sys_ssl}"
+
+  # explicitly catch the expected "don't use this" values
+  return false if ENV["USE_SYSTEM_OPENSSL"] =~ /false|f|0/i
+  # explicitly cast the environment variable to a true Boolean otherwise
+  !!ENV["USE_SYSTEM_OPENSSL"]
+end
+
 project "puppet-agent" do |proj|
   platform = proj.get_platform
 
@@ -253,7 +267,23 @@ project "puppet-agent" do |proj|
   end
   proj.component "ruby-shadow" unless platform.is_aix? || platform.is_windows?
   proj.component "ruby-augeas" unless platform.is_windows?
-  proj.component "openssl"
+
+  if use_system_openssl?
+    if platform.name =~ /^el-7-.*/
+      # Currently we plan to support linking against system openssl only on these platforms.
+      proj.setting(:vendor_openssl, "no")
+    else
+      # We cannot fail for other platforms on Jenkins so temporarily just warning and proceeding
+      warn "Currently linking against system openssl is supported only on Enterprise Linux 7"
+      warn "Using packaged openssl instead"
+      proj.setting(:vendor_openssl, "yes")
+      proj.component "openssl"
+    end
+  else
+    proj.setting(:vendor_openssl, "yes")
+    proj.component "openssl"
+  end
+
   proj.component "puppet-ca-bundle"
   proj.component "libxml2" unless platform.is_windows?
   proj.component "libxslt" unless platform.is_windows?
