@@ -129,6 +129,7 @@ component "openssl" do |pkg, settings, platform|
       no-dtls1 \
       no-idea \
       no-seed \
+      no-3des \
       no-ec2m \
       no-ssl2 \
       no-ssl2-method \
