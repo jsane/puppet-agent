@@ -1,1 +1,1 @@
-{"url": "git://github.com/jsane/puppet.git", "ref": "task/master/FIPS-changes"}
+{"url": "git://github.com/jsane/puppet.git", "ref": "task/master/Do_not_use_facts_to_make_FIPS_behavior_changes"}
