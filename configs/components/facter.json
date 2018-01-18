@@ -1,1 +1,1 @@
-{"url":"git://github.com/puppetlabs/facter.git","ref":"4fae8db17f0800b6116164e60ce0a55782a79ce5"}
+{"url":"git://github.com/jsane/facter.git","ref":"bug/3.9.x/FACT-1504-Uptime_resolver_fact_for_Windows_uses_unreliable_metric_for_uptime"}
